@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us - Crop Recommendation System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Hero Section -->
+        <div class="text-center mb-5">
+            <h1 class="display-4 mb-3">
+                <i class="bi bi-info-circle text-success"></i> About Us
+            </h1>
+            <p class="lead text-muted">Empowering farmers with AI-driven crop recommendations</p>
+        </div>
+
+        <!-- Mission Section -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body p-4">
+                <h2 class="card-title mb-3">
+                    <i class="bi bi-bullseye text-success"></i> Our Mission
+                </h2>
+                <p class="card-text">
+                    At Crop Recommendation System, we are dedicated to revolutionizing agriculture through 
+                    artificial intelligence and data-driven insights. Our mission is to empower farmers with 
+                    accurate, personalized crop recommendations that maximize yields, optimize resource usage, 
+                    and increase profitability.
+                </p>
+                <p class="card-text">
+                    We believe that every farmer deserves access to cutting-edge technology that can help them 
+                    make informed decisions about their crops, leading to sustainable farming practices and 
+                    improved livelihoods.
+                </p>
+            </div>
+        </div>
+
+        <!-- What We Do Section -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body p-4">
+                <h2 class="card-title mb-3">
+                    <i class="bi bi-gear-fill text-success"></i> What We Do
+                </h2>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <h5><i class="bi bi-cpu text-primary"></i> AI-Powered Recommendations</h5>
+                        <p class="text-muted">
+                            Our advanced machine learning models analyze soil conditions, weather patterns, 
+                            and historical data to provide personalized crop recommendations tailored to your 
+                            specific farm conditions.
+                        </p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h5><i class="bi bi-graph-up text-primary"></i> Yield Prediction</h5>
+                        <p class="text-muted">
+                            Predict potential crop yields based on various factors, helping you plan better 
+                            and optimize your farming operations for maximum productivity.
+                        </p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h5><i class="bi bi-cloud-sun text-primary"></i> Weather Integration</h5>
+                        <p class="text-muted">
+                            Real-time weather data integration ensures that our recommendations consider 
+                            current and forecasted weather conditions for optimal decision-making.
+                        </p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h5><i class="bi bi-map text-primary"></i> Farm Management</h5>
+                        <p class="text-muted">
+                            Comprehensive farm and field management tools to track your agricultural operations 
+                            and maintain detailed records of your farming activities.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technology Section -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body p-4">
+                <h2 class="card-title mb-3">
+                    <i class="bi bi-code-slash text-success"></i> Our Technology
+                </h2>
+                <p class="card-text">
+                    Our platform leverages state-of-the-art machine learning algorithms and data science 
+                    techniques to provide accurate recommendations. We use:
+                </p>
+                <ul class="list-unstyled">
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle-fill text-success"></i> 
+                        <strong>Machine Learning Models:</strong> Trained on extensive agricultural datasets 
+                        to understand crop patterns and optimal growing conditions
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle-fill text-success"></i> 
+                        <strong>Data Analytics:</strong> Advanced analytics to process soil, weather, and 
+                        historical farming data
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle-fill text-success"></i> 
+                        <strong>Real-time Processing:</strong> Fast and efficient processing to deliver 
+                        recommendations when you need them
+                    </li>
+                    <li class="mb-2">
+                        <i class="bi bi-check-circle-fill text-success"></i> 
+                        <strong>User-Friendly Interface:</strong> Intuitive design that makes advanced 
+                        technology accessible to all farmers
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Values Section -->
+        <div class="card shadow-sm mb-4">
+            <div class="card-body p-4">
+                <h2 class="card-title mb-3">
+                    <i class="bi bi-heart-fill text-success"></i> Our Values
+                </h2>
+                <div class="row">
+                    <div class="col-md-4 mb-3 text-center">
+                        <i class="bi bi-people-fill display-4 text-primary"></i>
+                        <h5 class="mt-2">Farmer-Centric</h5>
+                        <p class="text-muted">We put farmers at the center of everything we do</p>
+                    </div>
+                    <div class="col-md-4 mb-3 text-center">
+                        <i class="bi bi-shield-check display-4 text-primary"></i>
+                        <h5 class="mt-2">Reliable & Accurate</h5>
+                        <p class="text-muted">Providing trustworthy recommendations you can depend on</p>
+                    </div>
+                    <div class="col-md-4 mb-3 text-center">
+                        <i class="bi bi-globe display-4 text-primary"></i>
+                        <h5 class="mt-2">Accessible</h5>
+                        <p class="text-muted">Making advanced technology available to all farmers</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="card bg-success text-white mb-4">
+            <div class="card-body p-4 text-center">
+                <h3 class="card-title mb-3">Ready to Get Started?</h3>
+                <p class="card-text mb-4">
+                    Join thousands of farmers who are already using our platform to improve their crop yields 
+                    and farming operations.
+                </p>
+                {% if not user.is_authenticated %}
+                <a href="{% url 'users:register' %}" class="btn btn-light btn-lg me-2">
+                    <i class="bi bi-person-plus"></i> Sign Up Free
+                </a>
+                <a href="{% url 'users:login' %}" class="btn btn-outline-light btn-lg">
+                    <i class="bi bi-box-arrow-in-right"></i> Login
+                </a>
+                {% else %}
+                <a href="{% url 'users:dashboard' %}" class="btn btn-light btn-lg">
+                    <i class="bi bi-speedometer2"></i> Go to Dashboard
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

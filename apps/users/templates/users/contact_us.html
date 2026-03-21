@@ -1,0 +1,220 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contact Us - Crop Recommendation System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <!-- Hero Section -->
+        <div class="text-center mb-5">
+            <h1 class="display-4 mb-3">
+                <i class="bi bi-envelope-paper text-success"></i> Contact Us
+            </h1>
+            <p class="lead text-muted">We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
+        </div>
+
+        <div class="row">
+            <!-- Contact Form -->
+            <div class="col-lg-8 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body p-4">
+                        <h2 class="card-title mb-4">
+                            <i class="bi bi-chat-dots text-success"></i> Send us a Message
+                        </h2>
+                        
+                        {% if messages %}
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+
+                        <form method="post" action="{% url 'users:contact_us' %}">
+                            {% csrf_token %}
+                            
+                            <div class="mb-3">
+                                <label for="{{ form.name.id_for_label }}" class="form-label">
+                                    <i class="bi bi-person"></i> Name <span class="text-danger">*</span>
+                                </label>
+                                {{ form.name }}
+                                {% if form.name.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.name.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="{{ form.email.id_for_label }}" class="form-label">
+                                    <i class="bi bi-envelope"></i> Email <span class="text-danger">*</span>
+                                </label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.email.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="{{ form.subject.id_for_label }}" class="form-label">
+                                    <i class="bi bi-tag"></i> Subject <span class="text-danger">*</span>
+                                </label>
+                                {{ form.subject }}
+                                {% if form.subject.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.subject.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="{{ form.message.id_for_label }}" class="form-label">
+                                    <i class="bi bi-chat-text"></i> Message <span class="text-danger">*</span>
+                                </label>
+                                {{ form.message }}
+                                {% if form.message.errors %}
+                                    <div class="text-danger small mt-1">
+                                        {% for error in form.message.errors %}
+                                            <div>{{ error }}</div>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="bi bi-send"></i> Send Message
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body p-4">
+                        <h3 class="card-title mb-4">
+                            <i class="bi bi-info-circle text-success"></i> Get in Touch
+                        </h3>
+                        
+                        <div class="mb-4">
+                            <h5 class="mb-3">
+                                <i class="bi bi-envelope-fill text-primary"></i> Email
+                            </h5>
+                            <p class="text-muted mb-0">
+                                <a href="mailto:support@croprecommendation.com" class="text-decoration-none">
+                                    support@croprecommendation.com
+                                </a>
+                            </p>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5 class="mb-3">
+                                <i class="bi bi-telephone-fill text-primary"></i> Phone
+                            </h5>
+                            <p class="text-muted mb-0">
+                                <a href="tel:+1234567890" class="text-decoration-none">
+                                    +1 (234) 567-890
+                                </a>
+                            </p>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5 class="mb-3">
+                                <i class="bi bi-clock-fill text-primary"></i> Business Hours
+                            </h5>
+                            <p class="text-muted mb-0">
+                                Monday - Friday: 9:00 AM - 6:00 PM<br>
+                                Saturday: 10:00 AM - 4:00 PM<br>
+                                Sunday: Closed
+                            </p>
+                        </div>
+
+                        <div>
+                            <h5 class="mb-3">
+                                <i class="bi bi-geo-alt-fill text-primary"></i> Address
+                            </h5>
+                            <p class="text-muted mb-0">
+                                123 Agriculture Street<br>
+                                Farming City, FC 12345<br>
+                                United States
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Help Section -->
+                <div class="card shadow-sm bg-light">
+                    <div class="card-body p-4">
+                        <h5 class="card-title mb-3">
+                            <i class="bi bi-question-circle text-success"></i> Need Help?
+                        </h5>
+                        <p class="card-text text-muted small">
+                            Check out our <a href="{% url 'users:about_us' %}" class="text-success text-decoration-none">About Us</a> page 
+                            to learn more about our services, or browse our documentation for answers to common questions.
+                        </p>
+                        {% if not user.is_authenticated %}
+                        <p class="card-text text-muted small mb-0">
+                            Don't have an account? <a href="{% url 'users:register' %}" class="text-success text-decoration-none">Sign up</a> 
+                            to get started with our crop recommendation system.
+                        </p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="card shadow-sm mt-4">
+            <div class="card-body p-4">
+                <h2 class="card-title mb-4">
+                    <i class="bi bi-question-circle text-success"></i> Frequently Asked Questions
+                </h2>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <h5><i class="bi bi-question-diamond text-primary"></i> How do I get started?</h5>
+                        <p class="text-muted">
+                            Simply register for a free account, add your farm and field information, and start getting 
+                            AI-powered crop recommendations tailored to your specific conditions.
+                        </p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h5><i class="bi bi-question-diamond text-primary"></i> Is the service free?</h5>
+                        <p class="text-muted">
+                            Yes! Our basic crop recommendation service is completely free. We're committed to making 
+                            advanced farming technology accessible to all farmers.
+                        </p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h5><i class="bi bi-question-diamond text-primary"></i> How accurate are the recommendations?</h5>
+                        <p class="text-muted">
+                            Our machine learning models are trained on extensive agricultural datasets and continuously 
+                            improved. However, we recommend using our suggestions as a guide alongside your farming expertise.
+                        </p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <h5><i class="bi bi-question-diamond text-primary"></i> Can I use this for multiple farms?</h5>
+                        <p class="text-muted">
+                            Absolutely! You can add and manage multiple farms and fields within your account, each with 
+                            its own recommendations and history.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Crop Recommendation System - AI-Powered Farming{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Remove container padding for landing page */
+    main.container {
+        padding: 0 !important;
+        max-width: 100% !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section with Banner -->
+<div class="hero-section-banner">
+    <div class="hero-overlay"></div>
+    <div class="container position-relative">
+        <div class="row align-items-center min-vh-50">
+            <div class="col-lg-6">
+                <h1 class="mb-4 hero-title">
+                    <i class="bi bi-flower1"></i> Smart Crop Recommendations
+                </h1>
+                <p class="lead mb-4 hero-subtitle">Get AI-powered, personalized crop recommendations based on your soil, weather, and farm conditions. Maximize your yield and profits with data-driven insights.</p>
+                <div class="d-flex flex-wrap gap-3 mb-4">
+                    <a href="{% url 'users:register' %}" class="btn btn-hero-primary btn-lg">
+                        <i class="bi bi-person-plus"></i> Get Started Free
+                        <i class="bi bi-arrow-right ms-2"></i>
+                    </a>
+                    <a href="{% url 'users:login' %}" class="btn btn-hero-secondary btn-lg">
+                        <i class="bi bi-box-arrow-in-right"></i> Login
+                    </a>
+                </div>
+                <div class="d-flex flex-wrap gap-4 text-white hero-features">
+                    <div class="hero-feature-item">
+                        <i class="bi bi-check-circle-fill text-success"></i> AI-Powered
+                    </div>
+                    <div class="hero-feature-item">
+                        <i class="bi bi-check-circle-fill text-success"></i> Free to Start
+                    </div>
+                    <div class="hero-feature-item">
+                        <i class="bi bi-check-circle-fill text-success"></i> No Credit Card
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center mt-4 mt-lg-0">
+                <div class="hero-image-container">
+                    <img src="/media/user_uploads/banner.png" alt="Modern Farming with Technology - Farmer using tablet with drone in agricultural field" class="hero-banner-image" onerror="this.style.display='none'">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div class="features-section-wrapper">
+    <div class="container py-5">
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <div class="section-header">
+                    <h2 class="section-title">Why Choose Our Platform?</h2>
+                    <p class="section-subtitle">Everything you need for smarter farming decisions</p>
+                </div>
+            </div>
+        </div>
+    
+    <div class="row g-4">
+        <div class="col-md-4 mb-4">
+            <div class="feature-card-modern">
+                <div class="feature-icon-wrapper bg-gradient-primary">
+                    <i class="bi bi-cpu-fill"></i>
+                </div>
+                <h4 class="feature-title">AI-Powered Recommendations</h4>
+                <p class="feature-description">Get personalized crop recommendations using advanced machine learning models that analyze soil, weather, and historical data.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="feature-card-modern">
+                <div class="feature-icon-wrapper bg-gradient-info">
+                    <i class="bi bi-cloud-sun-fill"></i>
+                </div>
+                <h4 class="feature-title">Real-Time Weather Data</h4>
+                <p class="feature-description">Access accurate weather forecasts and historical data to plan your farming activities with confidence.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="feature-card-modern">
+                <div class="feature-icon-wrapper bg-gradient-success">
+                    <i class="bi bi-globe"></i>
+                </div>
+                <h4 class="feature-title">Satellite Soil Analysis</h4>
+                <p class="feature-description">Get detailed soil property data from satellite imagery and IoT sensors for precise field management.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="feature-card-modern">
+                <div class="feature-icon-wrapper bg-gradient-warning">
+                    <i class="bi bi-arrow-repeat"></i>
+                </div>
+                <h4 class="feature-title">Crop Rotation Tracking</h4>
+                <p class="feature-description">Maintain soil fertility with intelligent crop rotation suggestions based on your field history.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="feature-card-modern">
+                <div class="feature-icon-wrapper bg-gradient-secondary">
+                    <i class="bi bi-chat-dots-fill"></i>
+                </div>
+                <h4 class="feature-title">Multilingual Support</h4>
+                <p class="feature-description">Interact with our AI assistant in your preferred language - English, Hindi, Telugu, Tamil, Kannada, or Marathi.</p>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="feature-card-modern">
+                <div class="feature-icon-wrapper bg-gradient-primary">
+                    <i class="bi bi-phone-fill"></i>
+                </div>
+                <h4 class="feature-title">Offline Capability</h4>
+                <p class="feature-description">Access core features even in low-connectivity areas with our offline support system.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How It Works -->
+<div class="how-it-works-section">
+    <div class="container py-5">
+        <div class="row mb-5">
+            <div class="col-12 text-center">
+                <div class="section-header">
+                    <h2 class="section-title">How It Works</h2>
+                    <p class="section-subtitle">Simple steps to get started</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row g-4 position-relative">
+            <!-- Connecting Line (Desktop Only) -->
+            <div class="steps-connector d-none d-md-block"></div>
+            
+            <div class="col-md-3 col-sm-6">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <div class="step-icon">
+                        <i class="bi bi-person-plus-fill"></i>
+                    </div>
+                    <h5 class="step-title">Register & Add Farm</h5>
+                    <p class="step-description">Create your account and add your farm details with location information.</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <div class="step-icon">
+                        <i class="bi bi-map-fill"></i>
+                    </div>
+                    <h5 class="step-title">Add Fields</h5>
+                    <p class="step-description">Register your fields and let our system fetch soil and weather data.</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <div class="step-icon">
+                        <i class="bi bi-search"></i>
+                    </div>
+                    <h5 class="step-title">Get Recommendations</h5>
+                    <p class="step-description">Receive AI-powered crop recommendations with yield and profit predictions.</p>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6">
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <div class="step-icon">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+                    <h5 class="step-title">Maximize Yield</h5>
+                    <p class="step-description">Follow recommendations and track your progress to improve farm productivity.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+<div class="cta-section">
+    <div class="container py-5">
+        <div class="cta-card">
+            <div class="cta-content">
+                <div class="cta-icon">
+                    <i class="bi bi-rocket-takeoff-fill"></i>
+                </div>
+                <h2 class="cta-title">Ready to Transform Your Farming?</h2>
+                <p class="cta-subtitle">Join thousands of farmers making smarter decisions with AI-powered insights.</p>
+                <a href="{% url 'users:register' %}" class="btn btn-cta btn-lg">
+                    <i class="bi bi-person-plus"></i> Start Free Today
+                    <i class="bi bi-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

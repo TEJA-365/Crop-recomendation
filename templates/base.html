@@ -1,0 +1,186 @@
+{% load translation_tags %}
+<!DOCTYPE html>
+<html lang="{{ current_language|default:'en' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% translate_user "Crop Recommendation System" %}{% endblock %}</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-success">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'users:home' %}">
+                <i class="bi bi-flower1"></i> {% translate_user "Crop Recommendation" %}
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'users:about_us' %}">
+                            <i class="bi bi-info-circle"></i> {% translate_user "About" %}
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'users:contact_us' %}">
+                            <i class="bi bi-envelope"></i> {% translate_user "Contact" %}
+                        </a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'users:home' %}">
+                                <i class="bi bi-house-door"></i> {% translate_user "Dashboard" %}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'users:profile' %}">
+                                <i class="bi bi-person-circle"></i> {% translate_user "Profile" %}
+                            </a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="bi bi-translate"></i> <span class="d-none d-md-inline">{{ language_name }}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
+                                {% for lang_code, lang_name in supported_languages.items %}
+                                <li>
+                                    <form method="post" action="{% url 'translation:set_language' %}" class="language-form" style="display: inline;">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="language" value="{{ lang_code }}">
+                                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                                        <button type="submit" class="dropdown-item {% if current_language == lang_code %}active{% endif %}" data-lang="{{ lang_code }}">
+                                            {% if current_language == lang_code %}<i class="bi bi-check"></i> {% endif %}{{ lang_name }}
+                                        </button>
+                                    </form>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-gear"></i> {% translate_user "Settings" %}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="{% url 'users:change_password' %}">
+                                    <i class="bi bi-key"></i> {% translate_user "Change Password" %}
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'users:logout' %}">
+                                    <i class="bi bi-box-arrow-right"></i> {% translate_user "Logout" %}
+                                </a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'users:login' %}">
+                                <i class="bi bi-box-arrow-in-right"></i> {% translate_user "Login" %}
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'users:register' %}">
+                                <i class="bi bi-person-plus"></i> {% translate_user "Register" %}
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Messages -->
+    {% if messages %}
+        <div class="container mt-3">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Main Content -->
+    <main class="container my-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white text-center py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <h5 class="mb-3"><i class="bi bi-flower1"></i> {% translate_user "Crop Recommendation System" %}</h5>
+                    <p class="text-muted mb-0">{% translate_user "AI-powered farming solutions for better yields and profits." %}</p>
+                </div>
+                <div class="col-md-6">
+                    <h5 class="mb-3">{% translate_user "Quick Links" %}</h5>
+                    <div class="d-flex justify-content-center justify-content-md-end gap-3 flex-wrap">
+                        <a href="{% url 'users:about_us' %}" class="text-white text-decoration-none">
+                            <i class="bi bi-info-circle"></i> {% translate_user "About Us" %}
+                        </a>
+                        <a href="{% url 'users:contact_us' %}" class="text-white text-decoration-none">
+                            <i class="bi bi-envelope"></i> {% translate_user "Contact Us" %}
+                        </a>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'users:home' %}" class="text-white text-decoration-none">
+                                <i class="bi bi-house-door"></i> {% translate_user "Dashboard" %}
+                            </a>
+                            <a href="{% url 'users:profile' %}" class="text-white text-decoration-none">
+                                <i class="bi bi-person-circle"></i> {% translate_user "Profile" %}
+                            </a>
+                        {% else %}
+                            <a href="{% url 'users:login' %}" class="text-white text-decoration-none">
+                                <i class="bi bi-box-arrow-in-right"></i> {% translate_user "Login" %}
+                            </a>
+                            <a href="{% url 'users:register' %}" class="text-white text-decoration-none">
+                                <i class="bi bi-person-plus"></i> {% translate_user "Register" %}
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <hr class="my-3 bg-secondary">
+            <p class="text-muted mb-0">&copy; {% now "Y" %} {% translate_user "Crop Recommendation System. All rights reserved." %}</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
+    {% load static %}
+    <script src="{% static 'js/main.js' %}"></script>
+    <script>
+    // Language switching with loading indicator
+    document.addEventListener('DOMContentLoaded', function() {
+        const languageForms = document.querySelectorAll('.language-form');
+        languageForms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                const button = form.querySelector('button[type="submit"]');
+                const langCode = button.getAttribute('data-lang');
+                
+                // Show loading state
+                const originalText = button.innerHTML;
+                button.disabled = true;
+                button.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> ' + originalText;
+                
+                // Form will submit normally, page will reload with new language
+            });
+        });
+    });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
+

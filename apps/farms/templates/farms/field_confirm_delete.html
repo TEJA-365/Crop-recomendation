@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Field - Crop Recommendation{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card dashboard-card">
+            <div class="card-header bg-danger text-white">
+                <h4 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Delete Field</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle"></i> 
+                    <strong>Warning:</strong> This action cannot be undone. All associated crop history and soil data will be deleted.
+                </div>
+                
+                <p>Are you sure you want to delete the field <strong>"{{ field.name }}"</strong>?</p>
+                
+                <div class="card bg-light mb-3">
+                    <div class="card-body">
+                        <p class="mb-1"><strong>Field Name:</strong> {{ field.name }}</p>
+                        <p class="mb-1"><strong>Farm:</strong> {{ field.farm.name }}</p>
+                        <p class="mb-1"><strong>Area:</strong> {{ field.area }} hectares</p>
+                        <p class="mb-0"><strong>Crop History Records:</strong> {{ field.crop_history.count }}</p>
+                    </div>
+                </div>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'farms:field_detail' field.pk %}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-trash"></i> Yes, Delete Field
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

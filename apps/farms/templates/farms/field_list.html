@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+
+{% block title %}My Fields - Crop Recommendation{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2><i class="bi bi-grid"></i> My Fields</h2>
+                <p class="text-muted">Manage all your fields across farms</p>
+            </div>
+            <div>
+                <a href="{% url 'farms:field_create' %}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Create Field
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if fields %}
+<div class="row">
+    <div class="col-12">
+        <div class="card dashboard-card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-list-ul"></i> All Fields</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Field Name</th>
+                                <th>Farm</th>
+                                <th>Area (ha)</th>
+                                <th>Location</th>
+                                <th>Soil pH</th>
+                                <th>Moisture (%)</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for field in fields %}
+                            <tr>
+                                <td><strong>{{ field.name }}</strong></td>
+                                <td>
+                                    <a href="{% url 'farms:farm_detail' field.farm.pk %}" class="text-decoration-none">
+                                        {{ field.farm.name }}
+                                    </a>
+                                </td>
+                                <td>{{ field.area }}</td>
+                                <td>
+                                    {% if field.latitude and field.longitude %}
+                                        <span class="text-muted small">
+                                            {{ field.latitude|floatformat:4 }}, {{ field.longitude|floatformat:4 }}
+                                        </span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if field.soil_ph %}
+                                        <span class="badge bg-success">{{ field.soil_ph }}</span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if field.soil_moisture %}
+                                        <span class="badge bg-info">{{ field.soil_moisture }}%</span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{% url 'farms:field_detail' field.pk %}" class="btn btn-outline-primary">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="{% url 'farms:field_update' field.pk %}" class="btn btn-outline-secondary">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="{% url 'farms:field_delete' field.pk %}" class="btn btn-outline-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if farms_with_fields %}
+<div class="row mt-4">
+    <div class="col-12">
+        <h4 class="mb-3">Fields by Farm</h4>
+    </div>
+    {% for farm, farm_fields in farms_with_fields.items %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card dashboard-card">
+            <div class="card-header bg-success text-white">
+                <h6 class="mb-0">
+                    <i class="bi bi-house"></i> {{ farm.name }}
+                </h6>
+            </div>
+            <div class="card-body">
+                <p class="mb-2"><strong>{{ farm_fields|length }} field{{ farm_fields|length|pluralize }}</strong></p>
+                <ul class="list-unstyled mb-0">
+                    {% for field in farm_fields %}
+                    <li class="mb-1">
+                        <a href="{% url 'farms:field_detail' field.pk %}" class="text-decoration-none">
+                            <i class="bi bi-grid"></i> {{ field.name }}
+                        </a>
+                        <span class="text-muted small">({{ field.area }} ha)</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            <div class="card-footer bg-light">
+                <a href="{% url 'farms:farm_detail' farm.pk %}" class="btn btn-sm btn-outline-primary w-100">
+                    <i class="bi bi-eye"></i> View Farm
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% else %}
+<div class="row">
+    <div class="col-12">
+        <div class="card dashboard-card">
+            <div class="card-body text-center py-5">
+                <div class="empty-state">
+                    <i class="bi bi-grid" style="font-size: 4rem; opacity: 0.5;"></i>
+                    <h4 class="mt-3">No Fields Yet</h4>
+                    <p class="text-muted">Get started by creating your first field.</p>
+                    <div class="mt-4">
+                        <a href="{% url 'farms:field_create' %}" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Create Your First Field
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+

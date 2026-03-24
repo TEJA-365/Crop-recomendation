@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ field.name }} - Crop Recommendation{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2><i class="bi bi-grid"></i> {{ field.name }}</h2>
+                <p class="text-muted">Field details and history</p>
+            </div>
+            <div>
+                <a href="{% url 'recommendations:recommendation_for_field' field.pk %}" class="btn btn-success me-2">
+                    <i class="bi bi-search"></i> Get Recommendations
+                </a>
+                <a href="{% url 'farms:field_update' field.pk %}" class="btn btn-secondary me-2">
+                    <i class="bi bi-pencil"></i> Edit Field
+                </a>
+                <a href="{% url 'farms:farm_detail' field.farm.pk %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Farm
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card dashboard-card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-info-circle"></i> Field Information</h5>
+            </div>
+            <div class="card-body">
+                <p><strong><i class="bi bi-house"></i> Farm:</strong></p>
+                <p class="mb-3">
+                    <a href="{% url 'farms:farm_detail' field.farm.pk %}" class="text-decoration-none">
+                        {{ field.farm.name }}
+                    </a>
+                </p>
+                
+                <p><strong><i class="bi bi-geo-alt"></i> Location:</strong></p>
+                <p class="text-muted mb-3">
+                    {% if field.latitude and field.longitude %}
+                        Lat: {{ field.latitude|floatformat:6 }}, 
+                        Lng: {{ field.longitude|floatformat:6 }}
+                    {% else %}
+                        <span class="text-muted">Not set (using farm location)</span>
+                    {% endif %}
+                </p>
+                
+                <p><strong><i class="bi bi-rulers"></i> Area:</strong></p>
+                <p class="mb-3">{{ field.area }} hectares</p>
+                
+                <p><strong><i class="bi bi-calendar"></i> Last Updated:</strong></p>
+                <p class="mb-0">{{ field.last_updated|date:"F d, Y H:i" }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card dashboard-card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-flower1"></i> Soil Properties</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <p class="mb-1"><strong>pH Level:</strong></p>
+                        <p class="mb-0">
+                            {% if field.soil_ph %}
+                                <span class="badge bg-success" style="font-size: 1.1rem;">{{ field.soil_ph }}</span>
+                            {% else %}
+                                <span class="text-muted">Not set</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <p class="mb-1"><strong>Moisture:</strong></p>
+                        <p class="mb-0">
+                            {% if field.soil_moisture %}
+                                <span class="badge bg-info" style="font-size: 1.1rem;">{{ field.soil_moisture }}%</span>
+                            {% else %}
+                                <span class="text-muted">Not set</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <p class="mb-2"><strong>Nutrient Content (kg/ha):</strong></p>
+                <div class="row">
+                    <div class="col-4 text-center">
+                        <p class="mb-1"><strong>N</strong></p>
+                        <p class="mb-0">
+                            {% if field.n_content %}
+                                <span class="badge bg-primary">{{ field.n_content }}</span>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-4 text-center">
+                        <p class="mb-1"><strong>P</strong></p>
+                        <p class="mb-0">
+                            {% if field.p_content %}
+                                <span class="badge bg-warning text-dark">{{ field.p_content }}</span>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                    <div class="col-4 text-center">
+                        <p class="mb-1"><strong>K</strong></p>
+                        <p class="mb-0">
+                            {% if field.k_content %}
+                                <span class="badge bg-danger">{{ field.k_content }}</span>
+                            {% else %}
+                                <span class="text-muted">-</span>
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="mt-3">
+                    <a href="{% url 'soil:soil_data_options' %}" class="btn btn-sm btn-outline-success w-100">
+                        <i class="bi bi-globe"></i> Add/Update Soil Data
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card dashboard-card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="bi bi-clock-history"></i> Recent Crop History</h5>
+            </div>
+            <div class="card-body">
+                {% if crop_history %}
+                <div class="list-group">
+                    {% for crop in crop_history %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1">{{ crop.crop_name }}</h6>
+                                <p class="mb-1 small text-muted">
+                                    {{ crop.get_season_display }} {{ crop.year }}
+                                </p>
+                                {% if crop.yield_achieved %}
+                                    <p class="mb-0 small">Yield: {{ crop.yield_achieved }} kg/ha</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted text-center py-3">No crop history yet</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card dashboard-card">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="mb-0"><i class="bi bi-droplet"></i> Recent Soil Data</h5>
+            </div>
+            <div class="card-body">
+                {% if soil_data %}
+                <div class="list-group">
+                    {% for soil in soil_data %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h6 class="mb-1">pH: {{ soil.ph }} | Moisture: {{ soil.moisture }}%</h6>
+                                <p class="mb-1 small text-muted">
+                                    N: {{ soil.n }} | P: {{ soil.p }} | K: {{ soil.k }} (kg/ha)
+                                </p>
+                                <p class="mb-0 small text-muted">
+                                    {{ soil.timestamp|date:"M d, Y H:i" }} - 
+                                    <span class="badge bg-secondary">{{ soil.get_source_display }}</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted text-center py-3">No soil data yet</p>
+                <a href="{% url 'soil:soil_data_options' %}" class="btn btn-sm btn-outline-success w-100">
+                    <i class="bi bi-globe"></i> Add Soil Data
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

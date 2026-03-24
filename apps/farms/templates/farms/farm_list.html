@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}My Farms - Crop Recommendation{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2><i class="bi bi-house-door"></i> My Farms</h2>
+                <p class="text-muted">Manage your farms and fields</p>
+            </div>
+            <div>
+                <a href="{% url 'farms:farm_create' %}" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Create Farm
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if farms %}
+<div class="row">
+    {% for farm in farms %}
+    <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card dashboard-card h-100">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-house"></i> {{ farm.name }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <p class="mb-1"><strong><i class="bi bi-geo-alt"></i> Location:</strong></p>
+                    <p class="text-muted small mb-0">
+                        Lat: {{ farm.latitude|floatformat:4 }}, 
+                        Lng: {{ farm.longitude|floatformat:4 }}
+                    </p>
+                </div>
+                <div class="mb-3">
+                    <p class="mb-1"><strong><i class="bi bi-rulers"></i> Area:</strong></p>
+                    <p class="mb-0">{{ farm.area }} hectares</p>
+                </div>
+                <div class="mb-3">
+                    <p class="mb-1"><strong><i class="bi bi-flower1"></i> Soil Type:</strong></p>
+                    <p class="mb-0">
+                        <span class="badge bg-info">{{ farm.get_soil_type_display }}</span>
+                    </p>
+                </div>
+                <div class="mb-3">
+                    <p class="mb-1"><strong><i class="bi bi-grid"></i> Fields:</strong></p>
+                    <p class="mb-0">
+                        <span class="badge bg-primary">{{ farm.field_count }} field{{ farm.field_count|pluralize }}</span>
+                    </p>
+                </div>
+                <div class="mb-2">
+                    <p class="mb-0 text-muted small">
+                        <i class="bi bi-calendar"></i> Created: {{ farm.created_at|date:"M d, Y" }}
+                    </p>
+                </div>
+            </div>
+            <div class="card-footer bg-light">
+                <div class="btn-group w-100" role="group">
+                    <a href="{% url 'farms:farm_detail' farm.pk %}" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-eye"></i> View
+                    </a>
+                    <a href="{% url 'farms:farm_update' farm.pk %}" class="btn btn-sm btn-outline-secondary">
+                        <i class="bi bi-pencil"></i> Edit
+                    </a>
+                    <a href="{% url 'farms:farm_delete' farm.pk %}" class="btn btn-sm btn-outline-danger">
+                        <i class="bi bi-trash"></i> Delete
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="row">
+    <div class="col-12">
+        <div class="card dashboard-card">
+            <div class="card-body text-center py-5">
+                <div class="empty-state">
+                    <i class="bi bi-house" style="font-size: 4rem; opacity: 0.5;"></i>
+                    <h4 class="mt-3">No Farms Yet</h4>
+                    <p class="text-muted">Get started by creating your first farm.</p>
+                    <div class="mt-4">
+                        <a href="{% url 'farms:farm_create' %}" class="btn btn-success">
+                            <i class="bi bi-plus-circle"></i> Create Your First Farm
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+

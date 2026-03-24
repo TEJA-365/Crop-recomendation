@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ farm.name }} - Crop Recommendation{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2><i class="bi bi-house"></i> {{ farm.name }}</h2>
+                <p class="text-muted">Farm details and fields</p>
+            </div>
+            <div>
+                <a href="{% url 'farms:field_create' %}?farm={{ farm.pk }}" class="btn btn-primary me-2">
+                    <i class="bi bi-plus-circle"></i> Add Field
+                </a>
+                <a href="{% url 'farms:farm_update' farm.pk %}" class="btn btn-secondary me-2">
+                    <i class="bi bi-pencil"></i> Edit Farm
+                </a>
+                <a href="{% url 'farms:farm_list' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card dashboard-card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-info-circle"></i> Farm Information</h5>
+            </div>
+            <div class="card-body">
+                <p><strong><i class="bi bi-geo-alt"></i> Location:</strong></p>
+                <p class="text-muted">
+                    Latitude: {{ farm.latitude|floatformat:6 }}<br>
+                    Longitude: {{ farm.longitude|floatformat:6 }}
+                </p>
+                
+                <p><strong><i class="bi bi-rulers"></i> Area:</strong></p>
+                <p class="mb-3">{{ farm.area }} hectares</p>
+                
+                <p><strong><i class="bi bi-flower1"></i> Soil Type:</strong></p>
+                <p class="mb-3">
+                    <span class="badge bg-info">{{ farm.get_soil_type_display }}</span>
+                </p>
+                
+                <p><strong><i class="bi bi-calendar"></i> Created:</strong></p>
+                <p class="mb-0">{{ farm.created_at|date:"F d, Y" }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card dashboard-card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-bar-chart"></i> Statistics</h5>
+            </div>
+            <div class="card-body">
+                <p><strong>Total Fields:</strong></p>
+                <p class="mb-3">
+                    <span class="badge bg-primary" style="font-size: 1.2rem;">{{ fields.count }}</span>
+                </p>
+                
+                <p><strong>Total Field Area:</strong></p>
+                <p class="mb-3">
+                    <span class="badge bg-success" style="font-size: 1.2rem;">{{ total_field_area|floatformat:2 }} ha</span>
+                </p>
+                
+                <p><strong>Farm Area Coverage:</strong></p>
+                <p class="mb-0">
+                    {% if farm.area > 0 %}
+                        {% widthratio total_field_area farm.area 100 as coverage %}
+                        <span class="badge bg-info" style="font-size: 1.2rem;">{{ coverage|floatformat:1 }}%</span>
+                    {% else %}
+                        <span class="badge bg-secondary">N/A</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card dashboard-card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="bi bi-grid"></i> Fields ({{ fields.count }})</h5>
+            </div>
+            <div class="card-body">
+                {% if fields %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Field Name</th>
+                                <th>Area (ha)</th>
+                                <th>Location</th>
+                                <th>Soil pH</th>
+                                <th>Last Updated</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for field in fields %}
+                            <tr>
+                                <td><strong>{{ field.name }}</strong></td>
+                                <td>{{ field.area }}</td>
+                                <td>
+                                    {% if field.latitude and field.longitude %}
+                                        <span class="text-muted small">
+                                            {{ field.latitude|floatformat:4 }}, {{ field.longitude|floatformat:4 }}
+                                        </span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if field.soil_ph %}
+                                        <span class="badge bg-success">{{ field.soil_ph }}</span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ field.last_updated|date:"M d, Y" }}</td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{% url 'farms:field_detail' field.pk %}" class="btn btn-outline-primary">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="{% url 'farms:field_update' field.pk %}" class="btn btn-outline-secondary">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="{% url 'farms:field_delete' field.pk %}" class="btn btn-outline-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="bi bi-inbox" style="font-size: 3rem; opacity: 0.5;"></i>
+                    <p class="mt-3 text-muted">No fields yet. Create your first field!</p>
+                    <a href="{% url 'farms:field_create' %}?farm={{ farm.pk }}" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Add Field
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block title %}Soil Data Details - Crop Recommendation{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card dashboard-card">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0"><i class="bi bi-info-circle"></i> Soil Data Details</h4>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6 class="text-muted">Field Information</h6>
+                        <p class="mb-1"><strong>Field:</strong> {{ soil_data.field.name }}</p>
+                        <p class="mb-1"><strong>Farm:</strong> {{ soil_data.field.farm.name }}</p>
+                        <p class="mb-0"><strong>Area:</strong> {{ soil_data.field.area }} hectares</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-muted">Data Information</h6>
+                        <p class="mb-1"><strong>Source:</strong> 
+                            <span class="badge bg-{% if soil_data.source == 'soil_grids' %}info{% elif soil_data.source == 'bhuvan' %}warning{% elif soil_data.source == 'iot' %}success{% else %}secondary{% endif %}">
+                                {{ soil_data.get_source_display }}
+                            </span>
+                        </p>
+                        <p class="mb-0"><strong>Date:</strong> {{ soil_data.timestamp|date:"F d, Y H:i" }}</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <h5 class="mb-3">Soil Properties</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="text-muted mb-1">pH Level</h6>
+                                <h3 class="mb-0">{{ soil_data.ph }}</h3>
+                                <small class="text-muted">Scale: 0-14</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6 class="text-muted mb-1">Moisture</h6>
+                                <h3 class="mb-0">{{ soil_data.moisture|default:"N/A" }}{% if soil_data.moisture %}%{% endif %}</h3>
+                                <small class="text-muted">Percentage</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <h5 class="mb-3">Nutrient Content (kg/hectare)</h5>
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted mb-1">Nitrogen (N)</h6>
+                                <h3 class="mb-0">{{ soil_data.n|default:"N/A" }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted mb-1">Phosphorus (P)</h6>
+                                <h3 class="mb-0">{{ soil_data.p|default:"N/A" }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted mb-1">Potassium (K)</h6>
+                                <h3 class="mb-0">{{ soil_data.k|default:"N/A" }}</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                    <a href="{% url 'soil:soil_data_list' %}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to List
+                    </a>
+                    <a href="{% url 'soil:soil_data_fetch' %}" class="btn btn-success">
+                        <i class="bi bi-cloud-download"></i> Fetch New Data
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Soil Data - Crop Recommendation{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2><i class="bi bi-globe"></i> Add Soil Data</h2>
+                        <p class="text-muted">Choose how you want to add soil data for your fields</p>
+                    </div>
+                    <div>
+                        <a href="{% url 'users:dashboard' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left"></i> Back to Dashboard
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if not has_farms %}
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle"></i> 
+            <strong>No Farms Found:</strong> You need to create a farm first before adding soil data.
+            <div class="mt-2">
+                <a href="{% url 'farms:farm_create' %}" class="btn btn-sm btn-warning">
+                    <i class="bi bi-plus-circle"></i> Create Farm
+                </a>
+            </div>
+        </div>
+        {% elif not has_fields %}
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle"></i> 
+            <strong>No Fields Found:</strong> You need to create a field first before adding soil data.
+            <div class="mt-2">
+                <a href="{% url 'farms:field_create' %}" class="btn btn-sm btn-warning">
+                    <i class="bi bi-plus-circle"></i> Create Field
+                </a>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="row">
+            <!-- Manual Entry Option -->
+            <div class="col-md-6 mb-4">
+                <div class="card dashboard-card h-100">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-pencil-square"></i> Manual Entry
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <i class="bi bi-clipboard-data" style="font-size: 4rem; color: var(--primary-color); opacity: 0.7;"></i>
+                        </div>
+                        <h5 class="text-center mb-3">Enter Data Manually</h5>
+                        <p class="text-muted text-center mb-4">
+                            Manually enter soil properties like pH, moisture, and nutrient levels (N, P, K) for your fields.
+                        </p>
+                        <div class="mb-3">
+                            <h6><i class="bi bi-check-circle text-success"></i> Best for:</h6>
+                            <ul class="list-unstyled ms-3">
+                                <li><i class="bi bi-dot"></i> Lab test results</li>
+                                <li><i class="bi bi-dot"></i> Manual measurements</li>
+                                <li><i class="bi bi-dot"></i> Historical data</li>
+                                <li><i class="bi bi-dot"></i> Offline data entry</li>
+                            </ul>
+                        </div>
+                        <div class="d-grid">
+                            <a href="{% url 'soil:soil_data_add' %}" class="btn btn-primary btn-lg {% if not has_fields %}disabled{% endif %}">
+                                <i class="bi bi-pencil-square"></i> Enter Manually
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- API Fetch Option -->
+            <div class="col-md-6 mb-4">
+                <div class="card dashboard-card h-100">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="bi bi-cloud-download"></i> Fetch from API
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <i class="bi bi-globe" style="font-size: 4rem; color: var(--success-color); opacity: 0.7;"></i>
+                        </div>
+                        <h5 class="text-center mb-3">Fetch from Satellite/API</h5>
+                        <p class="text-muted text-center mb-4">
+                            Automatically fetch soil data from satellite imagery and soil databases using your field's location coordinates.
+                        </p>
+                        <div class="mb-3">
+                            <h6><i class="bi bi-check-circle text-success"></i> Best for:</h6>
+                            <ul class="list-unstyled ms-3">
+                                <li><i class="bi bi-dot"></i> Quick data retrieval</li>
+                                <li><i class="bi bi-dot"></i> Satellite-based data</li>
+                                <li><i class="bi bi-dot"></i> Real-time updates</li>
+                                <li><i class="bi bi-dot"></i> Fields with GPS coordinates</li>
+                            </ul>
+                        </div>
+                        <div class="d-grid">
+                            <a href="{% url 'soil:soil_data_fetch' %}" class="btn btn-success btn-lg {% if not has_fields %}disabled{% endif %}">
+                                <i class="bi bi-cloud-download"></i> Fetch from API
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Information Card -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card dashboard-card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="bi bi-info-circle"></i> About Soil Data</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h6><i class="bi bi-question-circle text-primary"></i> Why is soil data important?</h6>
+                                <p class="text-muted">
+                                    Soil data helps our AI system provide accurate crop recommendations. The system analyzes:
+                                </p>
+                                <ul>
+                                    <li><strong>pH Level:</strong> Acidity/alkalinity (0-14 scale)</li>
+                                    <li><strong>Moisture:</strong> Water content percentage</li>
+                                    <li><strong>Nutrients:</strong> Nitrogen (N), Phosphorus (P), Potassium (K)</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h6><i class="bi bi-lightbulb text-warning"></i> Tips</h6>
+                                <ul>
+                                    <li>For best results, use recent soil test data</li>
+                                    <li>API fetch works best with accurate GPS coordinates</li>
+                                    <li>You can update soil data anytime</li>
+                                    <li>Multiple soil records help track changes over time</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

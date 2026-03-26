@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Soil Data - Crop Recommendation{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2><i class="bi bi-globe"></i> Soil Data</h2>
+                <p class="text-muted">Manage soil data for your fields</p>
+            </div>
+            <div>
+                <a href="{% url 'soil:soil_data_options' %}" class="btn btn-success">
+                    <i class="bi bi-plus-circle"></i> Add Soil Data
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if soil_data_list %}
+<div class="row">
+    <div class="col-12">
+        <div class="card dashboard-card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-list-ul"></i> Soil Data Records</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Field</th>
+                                <th>Farm</th>
+                                <th>pH</th>
+                                <th>Moisture (%)</th>
+                                <th>N (kg/ha)</th>
+                                <th>P (kg/ha)</th>
+                                <th>K (kg/ha)</th>
+                                <th>Source</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for data in soil_data_list %}
+                            <tr>
+                                <td><strong>{{ data.field.name }}</strong></td>
+                                <td>{{ data.field.farm.name }}</td>
+                                <td>{{ data.ph }}</td>
+                                <td>{{ data.moisture|default:"-" }}</td>
+                                <td>{{ data.n|default:"-" }}</td>
+                                <td>{{ data.p|default:"-" }}</td>
+                                <td>{{ data.k|default:"-" }}</td>
+                                <td>
+                                    <span class="badge bg-{% if data.source == 'soil_grids' %}info{% elif data.source == 'bhuvan' %}warning{% elif data.source == 'iot' %}success{% else %}secondary{% endif %}">
+                                        {{ data.get_source_display }}
+                                    </span>
+                                </td>
+                                <td>{{ data.timestamp|date:"M d, Y H:i" }}</td>
+                                <td>
+                                    <a href="{% url 'soil:soil_data_detail' data.pk %}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i> View
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="row">
+    <div class="col-12">
+        <div class="card dashboard-card">
+            <div class="card-body text-center py-5">
+                <div class="empty-state">
+                    <i class="bi bi-inbox"></i>
+                    <h4>No Soil Data Yet</h4>
+                    <p class="text-muted">Get started by adding soil data manually or fetching from APIs.</p>
+                    <div class="mt-4">
+                        <a href="{% url 'soil:soil_data_options' %}" class="btn btn-success">
+                            <i class="bi bi-plus-circle"></i> Add Soil Data
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}Weather Forecast - Crop Recommendation{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2><i class="bi bi-calendar-week"></i> Weather Forecast</h2>
+                <p class="text-muted">Extended weather forecast for your location</p>
+            </div>
+            <div>
+                <a href="{% url 'weather:weather_data_fetch' %}" class="btn btn-info text-white">
+                    <i class="bi bi-arrow-left"></i> Back to Fetch
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if forecast %}
+<div class="row">
+    <div class="col-12">
+        <div class="card dashboard-card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">
+                    <i class="bi bi-geo-alt"></i> 
+                    Forecast for {{ forecast.city }}{% if forecast.country %}, {{ forecast.country }}{% endif %}
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>Temperature</th>
+                                <th>Condition</th>
+                                <th>Rainfall</th>
+                                <th>Humidity</th>
+                                <th>Wind Speed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in forecast.forecast %}
+                            <tr>
+                                <td><strong>{{ item.datetime }}</strong></td>
+                                <td>
+                                    <span class="badge bg-{% if item.temperature < 10 %}primary{% elif item.temperature > 30 %}danger{% else %}success{% endif %}">
+                                        {{ item.temperature }}°C
+                                    </span>
+                                </td>
+                                <td>{{ item.description|title }}</td>
+                                <td>
+                                    {% if item.rainfall > 0 %}
+                                        <span class="text-primary">{{ item.rainfall }} mm</span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ item.humidity }}%</td>
+                                <td>{{ item.wind_speed|floatformat:1 }} km/h</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="row">
+    <div class="col-12">
+        <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle"></i> No forecast data available.
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+

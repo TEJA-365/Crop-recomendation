@@ -1,0 +1,185 @@
+{% extends 'base.html' %}
+
+{% block title %}Fetch Weather Data - Crop Recommendation{% endblock %}
+
+{% block extra_css %}
+<style>
+    .loading-spinner {
+        display: none;
+    }
+    .loading-spinner.active {
+        display: inline-block;
+    }
+    .location-option {
+        display: none;
+    }
+    .location-option.active {
+        display: block;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card dashboard-card">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0"><i class="bi bi-cloud-download"></i> Fetch Weather Data from API</h4>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> 
+                    <strong>Note:</strong> This will fetch current weather data from OpenWeatherMap API. 
+                    Make sure you have set your OPENWEATHER_API_KEY in settings.
+                </div>
+
+                <form method="post" id="fetchForm">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                        <div class="alert alert-danger">
+                            {{ form.non_field_errors }}
+                        </div>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label class="form-label">Location Source <span class="text-danger">*</span></label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="location_type" value="field" id="location_field" checked onchange="toggleLocationOptions()">
+                            <label class="form-check-label" for="location_field">
+                                Field Location
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="location_type" value="farm" id="location_farm" onchange="toggleLocationOptions()">
+                            <label class="form-check-label" for="location_farm">
+                                Farm Location
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="location_type" value="custom" id="location_custom" onchange="toggleLocationOptions()">
+                            <label class="form-check-label" for="location_custom">
+                                Custom Coordinates
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="location-option active" id="field_option">
+                        <div class="mb-3">
+                            <label for="{{ form.field.id_for_label }}" class="form-label">Field <span class="text-danger">*</span></label>
+                            {{ form.field }}
+                            {% if form.field.errors %}
+                                <div class="text-danger small">{{ form.field.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="location-option" id="farm_option">
+                        <div class="mb-3">
+                            <label for="{{ form.farm.id_for_label }}" class="form-label">Farm <span class="text-danger">*</span></label>
+                            {{ form.farm }}
+                            {% if form.farm.errors %}
+                                <div class="text-danger small">{{ form.farm.errors }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="location-option" id="custom_option">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.latitude.id_for_label }}" class="form-label">Latitude <span class="text-danger">*</span></label>
+                                {{ form.latitude }}
+                                {% if form.latitude.errors %}
+                                    <div class="text-danger small">{{ form.latitude.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="{{ form.longitude.id_for_label }}" class="form-label">Longitude <span class="text-danger">*</span></label>
+                                {{ form.longitude }}
+                                {% if form.longitude.errors %}
+                                    <div class="text-danger small">{{ form.longitude.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="{{ form.forecast_days.id_for_label }}" class="form-label">Forecast Days</label>
+                        {{ form.forecast_days }}
+                        {% if form.forecast_days.errors %}
+                            <div class="text-danger small">{{ form.forecast_days.errors }}</div>
+                        {% endif %}
+                        <div class="form-text">Number of days for weather forecast (1-7 days)</div>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'users:dashboard' %}" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Cancel
+                        </a>
+                        <button type="submit" class="btn btn-info text-white" id="fetchBtn">
+                            <span class="loading-spinner spinner-border spinner-border-sm me-2" role="status"></span>
+                            <i class="bi bi-cloud-download"></i> Fetch Weather Data
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card dashboard-card mt-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-question-circle"></i> About Weather API</h5>
+            </div>
+            <div class="card-body">
+                <h6><i class="bi bi-cloud text-info"></i> OpenWeatherMap API</h6>
+                <p class="text-muted">
+                    We use OpenWeatherMap API to fetch real-time weather data including temperature, 
+                    humidity, rainfall, wind speed, and forecasts. The API provides accurate weather 
+                    information for any location worldwide.
+                </p>
+                <p class="text-muted small">
+                    <strong>Note:</strong> You need to set OPENWEATHER_API_KEY in your environment 
+                    variables or settings. Get a free API key from 
+                    <a href="https://openweathermap.org/api" target="_blank">openweathermap.org</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    function toggleLocationOptions() {
+        const fieldOption = document.getElementById('field_option');
+        const farmOption = document.getElementById('farm_option');
+        const customOption = document.getElementById('custom_option');
+        
+        const fieldRadio = document.getElementById('location_field');
+        const farmRadio = document.getElementById('location_farm');
+        const customRadio = document.getElementById('location_custom');
+        
+        // Hide all options
+        fieldOption.classList.remove('active');
+        farmOption.classList.remove('active');
+        customOption.classList.remove('active');
+        
+        // Show selected option
+        if (fieldRadio.checked) {
+            fieldOption.classList.add('active');
+        } else if (farmRadio.checked) {
+            farmOption.classList.add('active');
+        } else if (customRadio.checked) {
+            customOption.classList.add('active');
+        }
+    }
+    
+    document.getElementById('fetchForm').addEventListener('submit', function() {
+        const btn = document.getElementById('fetchBtn');
+        const spinner = btn.querySelector('.loading-spinner');
+        btn.disabled = true;
+        spinner.classList.add('active');
+        btn.querySelector('i').style.display = 'none';
+    });
+</script>
+{% endblock %}
+{% endblock %}
+

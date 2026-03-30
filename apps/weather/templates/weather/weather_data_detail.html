@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+
+{% block title %}Weather Data Details - Crop Recommendation{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card dashboard-card mb-4">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0"><i class="bi bi-info-circle"></i> Weather Data Details</h4>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h6 class="text-muted">Location</h6>
+                        <p class="mb-1"><strong>Latitude:</strong> {{ weather_data.latitude }}</p>
+                        <p class="mb-1"><strong>Longitude:</strong> {{ weather_data.longitude }}</p>
+                        {% if location_name %}
+                            <p class="mb-0"><strong>Location:</strong> {{ location_name }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-muted">Date Information</h6>
+                        <p class="mb-1"><strong>Date:</strong> {{ weather_data.date|date:"F d, Y" }}</p>
+                        <p class="mb-0"><strong>Recorded:</strong> {{ weather_data.created_at|date:"F d, Y H:i" }}</p>
+                    </div>
+                </div>
+
+                {% if alerts %}
+                <div class="alert alert-warning">
+                    <h6><i class="bi bi-exclamation-triangle"></i> Weather Alerts</h6>
+                    <ul class="mb-0">
+                        {% for alert in alerts %}
+                        <li>{{ alert }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <hr>
+
+                <h5 class="mb-3">Current Weather Conditions</h5>
+                <div class="row">
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted mb-1">Temperature</h6>
+                                <h3 class="mb-0">
+                                    <span class="badge bg-{% if weather_data.temperature < 10 %}primary{% elif weather_data.temperature > 30 %}danger{% else %}success{% endif %}">
+                                        {{ weather_data.temperature }}°C
+                                    </span>
+                                </h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted mb-1">Rainfall</h6>
+                                <h3 class="mb-0">{{ weather_data.rainfall }} mm</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted mb-1">Humidity</h6>
+                                <h3 class="mb-0">{{ weather_data.humidity }}%</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted mb-1">Wind Speed</h6>
+                                <h3 class="mb-0">{{ weather_data.wind_speed }} km/h</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if weather_data.forecast_data %}
+                <hr>
+                <h5 class="mb-3">Additional Information</h5>
+                <div class="row">
+                    {% if weather_data.forecast_data.pressure %}
+                    <div class="col-md-6 mb-3">
+                        <p><strong>Pressure:</strong> {{ weather_data.forecast_data.pressure }} hPa</p>
+                    </div>
+                    {% endif %}
+                    {% if weather_data.forecast_data.description %}
+                    <div class="col-md-6 mb-3">
+                        <p><strong>Condition:</strong> {{ weather_data.forecast_data.description|title }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    {% if forecast %}
+    <div class="col-md-4">
+        <div class="card dashboard-card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-calendar-week"></i> Weather Forecast</h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small mb-3">
+                    <strong>Location:</strong> {{ forecast.city }}{% if forecast.country %}, {{ forecast.country }}{% endif %}
+                </p>
+                <div class="list-group">
+                    {% for item in forecast.forecast|slice:":7" %}
+                    <div class="list-group-item">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong>{{ item.datetime|date:"M d, H:i" }}</strong>
+                                <br>
+                                <small class="text-muted">{{ item.description|title }}</small>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge bg-info">{{ item.temperature }}°C</span>
+                                {% if item.rainfall > 0 %}
+                                    <br><small class="text-primary">{{ item.rainfall }}mm</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="mt-3">
+                    <a href="{% url 'weather:weather_forecast' %}?lat={{ weather_data.latitude }}&lon={{ weather_data.longitude }}&days=7" class="btn btn-sm btn-outline-success w-100">
+                        <i class="bi bi-calendar-range"></i> View Full Forecast
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="{% url 'weather:weather_data_list' %}" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back to List
+            </a>
+            <a href="{% url 'weather:weather_data_fetch' %}" class="btn btn-info text-white">
+                <i class="bi bi-cloud-download"></i> Fetch New Data
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,93 @@
+{
+  "accuracy": 0.85,
+  "precision": 0.8616792929292928,
+  "recall": 0.85,
+  "f1_score": 0.8507525870528966,
+  "classification_report": {
+    "Chilli": {
+      "precision": 0.7272727272727273,
+      "recall": 0.8,
+      "f1-score": 0.7619047619047619,
+      "support": 10.0
+    },
+    "Cotton": {
+      "precision": 1.0,
+      "recall": 0.9,
+      "f1-score": 0.9473684210526315,
+      "support": 10.0
+    },
+    "Groundnut": {
+      "precision": 0.6363636363636364,
+      "recall": 0.7,
+      "f1-score": 0.6666666666666666,
+      "support": 10.0
+    },
+    "Maize": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1-score": 1.0,
+      "support": 10.0
+    },
+    "Onion": {
+      "precision": 0.8,
+      "recall": 0.8,
+      "f1-score": 0.8,
+      "support": 10.0
+    },
+    "Pigeon Pea": {
+      "precision": 0.8181818181818182,
+      "recall": 0.9,
+      "f1-score": 0.8571428571428571,
+      "support": 10.0
+    },
+    "Potato": {
+      "precision": 0.75,
+      "recall": 0.9,
+      "f1-score": 0.8181818181818182,
+      "support": 10.0
+    },
+    "Rice": {
+      "precision": 0.9,
+      "recall": 0.9,
+      "f1-score": 0.9,
+      "support": 10.0
+    },
+    "Soybean": {
+      "precision": 0.875,
+      "recall": 0.7,
+      "f1-score": 0.7777777777777778,
+      "support": 10.0
+    },
+    "Sugarcane": {
+      "precision": 1.0,
+      "recall": 0.9,
+      "f1-score": 0.9473684210526315,
+      "support": 10.0
+    },
+    "Tomato": {
+      "precision": 1.0,
+      "recall": 0.7,
+      "f1-score": 0.8235294117647058,
+      "support": 10.0
+    },
+    "Wheat": {
+      "precision": 0.8333333333333334,
+      "recall": 1.0,
+      "f1-score": 0.9090909090909091,
+      "support": 10.0
+    },
+    "accuracy": 0.85,
+    "macro avg": {
+      "precision": 0.8616792929292929,
+      "recall": 0.85,
+      "f1-score": 0.8507525870528966,
+      "support": 120.0
+    },
+    "weighted avg": {
+      "precision": 0.8616792929292928,
+      "recall": 0.85,
+      "f1-score": 0.8507525870528966,
+      "support": 120.0
+    }
+  }
+}

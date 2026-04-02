@@ -1,0 +1,30 @@
+{
+  "feature_names": [
+    "crop_encoded",
+    "ph",
+    "moisture",
+    "n",
+    "p",
+    "k",
+    "temperature",
+    "rainfall",
+    "humidity",
+    "np_ratio",
+    "nk_ratio",
+    "pk_ratio",
+    "total_nutrients",
+    "n_sufficient",
+    "p_sufficient",
+    "k_sufficient",
+    "lat_norm",
+    "lon_norm"
+  ],
+  "n_features": 18,
+  "train_samples": 432,
+  "val_samples": 48,
+  "test_samples": 120,
+  "yield_min": 257.97,
+  "yield_max": 83481.18,
+  "yield_mean": 13205.029766666667,
+  "yield_std": 18047.08913313266
+}

@@ -1,0 +1,47 @@
+{
+  "model_type": "RandomForestClassifier",
+  "n_features": 20,
+  "n_classes": 12,
+  "feature_names": [
+    "ph",
+    "moisture",
+    "n",
+    "p",
+    "k",
+    "temperature",
+    "rainfall",
+    "humidity",
+    "np_ratio",
+    "nk_ratio",
+    "pk_ratio",
+    "total_nutrients",
+    "n_sufficient",
+    "p_sufficient",
+    "k_sufficient",
+    "lat_norm",
+    "lon_norm",
+    "ph_category_encoded",
+    "temp_category_encoded",
+    "rainfall_category_encoded"
+  ],
+  "class_names": [
+    "Chilli",
+    "Cotton",
+    "Groundnut",
+    "Maize",
+    "Onion",
+    "Pigeon Pea",
+    "Potato",
+    "Rice",
+    "Soybean",
+    "Sugarcane",
+    "Tomato",
+    "Wheat"
+  ],
+  "test_metrics": {
+    "accuracy": 0.85,
+    "precision": 0.8616792929292928,
+    "recall": 0.85,
+    "f1_score": 0.8507525870528966
+  }
+}

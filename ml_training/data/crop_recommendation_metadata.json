@@ -1,0 +1,43 @@
+{
+  "feature_names": [
+    "ph",
+    "moisture",
+    "n",
+    "p",
+    "k",
+    "temperature",
+    "rainfall",
+    "humidity",
+    "np_ratio",
+    "nk_ratio",
+    "pk_ratio",
+    "total_nutrients",
+    "n_sufficient",
+    "p_sufficient",
+    "k_sufficient",
+    "lat_norm",
+    "lon_norm",
+    "ph_category_encoded",
+    "temp_category_encoded",
+    "rainfall_category_encoded"
+  ],
+  "n_features": 20,
+  "n_classes": 12,
+  "class_names": [
+    "Chilli",
+    "Cotton",
+    "Groundnut",
+    "Maize",
+    "Onion",
+    "Pigeon Pea",
+    "Potato",
+    "Rice",
+    "Soybean",
+    "Sugarcane",
+    "Tomato",
+    "Wheat"
+  ],
+  "train_samples": 432,
+  "val_samples": 48,
+  "test_samples": 120
+}

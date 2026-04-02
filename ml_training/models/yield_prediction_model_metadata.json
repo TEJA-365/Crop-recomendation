@@ -1,0 +1,34 @@
+{
+  "model_type": "RandomForestRegressor",
+  "n_features": 18,
+  "feature_names": [
+    "crop_encoded",
+    "ph",
+    "moisture",
+    "n",
+    "p",
+    "k",
+    "temperature",
+    "rainfall",
+    "humidity",
+    "np_ratio",
+    "nk_ratio",
+    "pk_ratio",
+    "total_nutrients",
+    "n_sufficient",
+    "p_sufficient",
+    "k_sufficient",
+    "lat_norm",
+    "lon_norm"
+  ],
+  "yield_min": 257.97,
+  "yield_max": 83481.18,
+  "yield_mean": 13205.029766666667,
+  "yield_std": 18047.08913313266,
+  "test_metrics": {
+    "rmse": 7017.677387328501,
+    "mae": 3137.157732500001,
+    "r2_score": 0.8775032213494248,
+    "mape": 63.33815939714717
+  }
+}

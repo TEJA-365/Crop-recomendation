@@ -1,0 +1,408 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ recommendation.crop_name }} Recommendation - Crop Recommendation{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2><i class="bi bi-flower1"></i> {{ recommendation.crop_name }}</h2>
+                <p class="text-muted">Recommendation for {{ recommendation.field.name }}</p>
+            </div>
+            <div>
+                <a href="{% url 'recommendations:recommendation_list' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to List
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-8">
+        <div class="card dashboard-card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-info-circle"></i> Recommendation Details</h5>
+            </div>
+            <div class="card-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <p><strong><i class="bi bi-house"></i> Field:</strong></p>
+                        <p class="mb-3">
+                            <a href="{% url 'farms:field_detail' recommendation.field.pk %}" class="text-decoration-none">
+                                {{ recommendation.field.name }}
+                            </a>
+                            <br>
+                            <small class="text-muted">{{ recommendation.field.farm.name }}</small>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong><i class="bi bi-calendar"></i> Generated:</strong></p>
+                        <p class="mb-3">{{ recommendation.created_at|date:"F d, Y H:i" }}</p>
+                    </div>
+                </div>
+
+                <hr>
+
+                <h5 class="mb-3">Scores</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <p class="mb-1"><strong>Confidence Score:</strong></p>
+                        <div class="progress" style="height: 30px;">
+                            <div class="progress-bar bg-{% if recommendation.confidence_score >= 80 %}success{% elif recommendation.confidence_score >= 60 %}warning{% else %}danger{% endif %}" 
+                                 role="progressbar" 
+                                 style="width: {{ recommendation.confidence_score }}%"
+                                 aria-valuenow="{{ recommendation.confidence_score }}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                                {{ recommendation.confidence_score }}%
+                            </div>
+                        </div>
+                        <small class="text-muted">How well this crop matches your field conditions</small>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <p class="mb-1"><strong>Sustainability Score:</strong></p>
+                        <div class="progress" style="height: 30px;">
+                            <div class="progress-bar bg-{% if recommendation.sustainability_score >= 75 %}success{% elif recommendation.sustainability_score >= 50 %}warning{% else %}danger{% endif %}" 
+                                 role="progressbar" 
+                                 style="width: {{ recommendation.sustainability_score }}%"
+                                 aria-valuenow="{{ recommendation.sustainability_score }}" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                                {{ recommendation.sustainability_score|floatformat:1 }}%
+                            </div>
+                        </div>
+                        <small class="text-muted">Environmental sustainability rating</small>
+                    </div>
+                </div>
+
+                <hr>
+
+                <h5 class="mb-3">Expected Outcomes</h5>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted mb-1">Expected Yield</h6>
+                                <h3 class="mb-0">{{ recommendation.expected_yield|floatformat:0 }} kg/ha</h3>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted mb-1">Net Profit</h6>
+                                <h3 class="mb-0 text-success">₹{{ recommendation.profit_margin|floatformat:0 }}</h3>
+                                {% if recommendation.reasoning.profit_details.profit_margin_percentage %}
+                                <small class="text-muted">{{ recommendation.reasoning.profit_details.profit_margin_percentage|floatformat:1 }}% margin</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if recommendation.reasoning.profit_details %}
+                <div class="mt-4">
+                    <div class="card bg-light">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="bi bi-calculator"></i> Detailed Profit Breakdown</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <!-- Revenue Section -->
+                                <div class="col-md-6 mb-4">
+                                    <h6 class="text-muted mb-3"><i class="bi bi-arrow-up-circle text-success"></i> Revenue</h6>
+                                    <div class="p-3 bg-white rounded">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span>Total Revenue</span>
+                                            <strong class="text-success fs-4">₹{{ recommendation.reasoning.profit_details.revenue|floatformat:0 }}</strong>
+                                        </div>
+                                        <hr class="my-2">
+                                        <div class="small text-muted">
+                                            <div class="mb-1">
+                                                <strong>Yield:</strong> {{ recommendation.reasoning.profit_details.expected_yield|floatformat:0 }} kg/ha
+                                            </div>
+                                            <div>
+                                                <strong>Market Price:</strong> ₹{{ recommendation.reasoning.profit_details.market_price_per_kg }}/kg
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Costs Section -->
+                                <div class="col-md-6 mb-4">
+                                    <h6 class="text-muted mb-3"><i class="bi bi-arrow-down-circle text-danger"></i> Costs</h6>
+                                    <div class="p-3 bg-white rounded">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span>Total Costs</span>
+                                            <strong class="text-danger fs-4">₹{{ recommendation.reasoning.profit_details.total_costs|floatformat:0 }}</strong>
+                                        </div>
+                                        <hr class="my-2">
+                                        <div class="small">
+                                            <div class="mb-2">
+                                                <div class="d-flex justify-content-between">
+                                                    <span class="text-muted">Input Costs:</span>
+                                                    <strong>₹{{ recommendation.reasoning.profit_details.input_costs|floatformat:0 }}</strong>
+                                                </div>
+                                                <small class="text-muted">(Seeds, Fertilizers, Pesticides)</small>
+                                            </div>
+                                            <div>
+                                                <div class="d-flex justify-content-between">
+                                                    <span class="text-muted">Labor Costs:</span>
+                                                    <strong>₹{{ recommendation.reasoning.profit_details.labor_costs|floatformat:0 }}</strong>
+                                                </div>
+                                                <small class="text-muted">(Labor, Equipment)</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <!-- Profit Summary -->
+                            <div class="row">
+                                <div class="col-md-4 mb-3">
+                                    <div class="text-center p-3 bg-success text-white rounded">
+                                        <h6 class="mb-2">Net Profit</h6>
+                                        <h3 class="mb-0">₹{{ recommendation.reasoning.profit_details.risk_adjusted_profit|floatformat:0 }}</h3>
+                                        {% if recommendation.reasoning.profit_details.risk_factor_percentage %}
+                                        <small class="d-block mt-2 opacity-75">
+                                            Risk-adjusted ({{ recommendation.reasoning.profit_details.risk_factor_percentage|floatformat:0 }}% risk)
+                                        </small>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="text-center p-3 bg-primary text-white rounded">
+                                        <h6 class="mb-2">ROI</h6>
+                                        <h3 class="mb-0">{{ recommendation.reasoning.profit_details.roi|floatformat:1 }}%</h3>
+                                        <small class="d-block mt-2 opacity-75">Return on Investment</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <div class="text-center p-3 bg-info text-white rounded">
+                                        <h6 class="mb-2">Profit Margin</h6>
+                                        <h3 class="mb-0">{{ recommendation.reasoning.profit_details.profit_margin_percentage|floatformat:1 }}%</h3>
+                                        <small class="d-block mt-2 opacity-75">Profit as % of Revenue</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if recommendation.reasoning.sustainability_details %}
+                <div class="mt-4">
+                    <div class="card bg-light">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0"><i class="bi bi-leaf"></i> Detailed Sustainability Breakdown</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-4">
+                                <div class="col-12">
+                                    <div class="text-center p-3 bg-white rounded">
+                                        <h6 class="text-muted mb-2">Overall Sustainability Score</h6>
+                                        <h2 class="mb-0 text-{% if recommendation.sustainability_score >= 75 %}success{% elif recommendation.sustainability_score >= 50 %}warning{% else %}danger{% endif %}">
+                                            {{ recommendation.sustainability_score|floatformat:1 }}/100
+                                        </h2>
+                                        <small class="text-muted">Based on 4 environmental factors</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <!-- Water Efficiency -->
+                                <div class="col-md-6 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-header bg-info text-white">
+                                            <h6 class="mb-0"><i class="bi bi-droplet"></i> Water Efficiency</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="text-center mb-3">
+                                                <h3 class="mb-0 text-info">{{ recommendation.reasoning.sustainability_details.breakdown.water_score|floatformat:1 }}/25</h3>
+                                                <small class="text-muted">Score</small>
+                                            </div>
+                                            <div class="progress mb-3" style="height: 25px;">
+                                                <div class="progress-bar bg-info" 
+                                                     role="progressbar" 
+                                                     style="width: {{ recommendation.reasoning.sustainability_details.breakdown.water_score_percentage }}%"
+                                                     aria-valuenow="{{ recommendation.reasoning.sustainability_details.breakdown.water_score }}" 
+                                                     aria-valuemin="0" 
+                                                     aria-valuemax="25">
+                                                </div>
+                                            </div>
+                                            {% if recommendation.reasoning.sustainability_details.factors.water_usage %}
+                                            <div class="text-center">
+                                                <small class="text-muted">
+                                                    <strong>Water Usage:</strong><br>
+                                                    {{ recommendation.reasoning.sustainability_details.factors.water_usage|floatformat:0 }} L/ha
+                                                </small>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Soil Health -->
+                                <div class="col-md-6 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-header bg-success text-white">
+                                            <h6 class="mb-0"><i class="bi bi-flower2"></i> Soil Health</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="text-center mb-3">
+                                                <h3 class="mb-0 text-success">{{ recommendation.reasoning.sustainability_details.breakdown.soil_score|floatformat:1 }}/25</h3>
+                                                <small class="text-muted">Score</small>
+                                            </div>
+                                            <div class="progress mb-3" style="height: 25px;">
+                                                <div class="progress-bar bg-success" 
+                                                     role="progressbar" 
+                                                     style="width: {{ recommendation.reasoning.sustainability_details.breakdown.soil_score_percentage }}%"
+                                                     aria-valuenow="{{ recommendation.reasoning.sustainability_details.breakdown.soil_score }}" 
+                                                     aria-valuemin="0" 
+                                                     aria-valuemax="25">
+                                                </div>
+                                            </div>
+                                            {% if recommendation.reasoning.sustainability_details.factors.soil_health_impact is not None %}
+                                            <div class="text-center">
+                                                <small class="text-muted">
+                                                    <strong>Soil Impact:</strong><br>
+                                                    {% if recommendation.reasoning.sustainability_details.factors.soil_health_impact > 0 %}+{% endif %}{{ recommendation.reasoning.sustainability_details.factors.soil_health_impact|floatformat:0 }}
+                                                    <span class="badge bg-{% if recommendation.reasoning.sustainability_details.factors.soil_health_impact > 0 %}success{% elif recommendation.reasoning.sustainability_details.factors.soil_health_impact < 0 %}danger{% else %}secondary{% endif %}">
+                                                        {% if recommendation.reasoning.sustainability_details.factors.soil_health_impact > 0 %}Positive{% elif recommendation.reasoning.sustainability_details.factors.soil_health_impact < 0 %}Negative{% else %}Neutral{% endif %}
+                                                    </span>
+                                                </small>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Carbon Footprint -->
+                                <div class="col-md-6 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-header bg-warning text-dark">
+                                            <h6 class="mb-0"><i class="bi bi-cloud"></i> Carbon Footprint</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="text-center mb-3">
+                                                <h3 class="mb-0 text-warning">{{ recommendation.reasoning.sustainability_details.breakdown.carbon_score|floatformat:1 }}/25</h3>
+                                                <small class="text-muted">Score</small>
+                                            </div>
+                                            <div class="progress mb-3" style="height: 25px;">
+                                                <div class="progress-bar bg-warning" 
+                                                     role="progressbar" 
+                                                     style="width: {{ recommendation.reasoning.sustainability_details.breakdown.carbon_score_percentage }}%"
+                                                     aria-valuenow="{{ recommendation.reasoning.sustainability_details.breakdown.carbon_score }}" 
+                                                     aria-valuemin="0" 
+                                                     aria-valuemax="25">
+                                                </div>
+                                            </div>
+                                            {% if recommendation.reasoning.sustainability_details.factors.carbon_footprint %}
+                                            <div class="text-center">
+                                                <small class="text-muted">
+                                                    <strong>CO₂ Emissions:</strong><br>
+                                                    {{ recommendation.reasoning.sustainability_details.factors.carbon_footprint|floatformat:0 }} kg CO₂/ha
+                                                </small>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Biodiversity -->
+                                <div class="col-md-6 mb-4">
+                                    <div class="card h-100">
+                                        <div class="card-header bg-primary text-white">
+                                            <h6 class="mb-0"><i class="bi bi-tree"></i> Biodiversity</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="text-center mb-3">
+                                                <h3 class="mb-0 text-primary">{{ recommendation.reasoning.sustainability_details.breakdown.biodiversity_score|floatformat:1 }}/25</h3>
+                                                <small class="text-muted">Score</small>
+                                            </div>
+                                            <div class="progress mb-3" style="height: 25px;">
+                                                <div class="progress-bar bg-primary" 
+                                                     role="progressbar" 
+                                                     style="width: {{ recommendation.reasoning.sustainability_details.breakdown.biodiversity_score_percentage }}%"
+                                                     aria-valuenow="{{ recommendation.reasoning.sustainability_details.breakdown.biodiversity_score }}" 
+                                                     aria-valuemin="0" 
+                                                     aria-valuemax="25">
+                                                </div>
+                                            </div>
+                                            {% if recommendation.reasoning.sustainability_details.factors.biodiversity_impact is not None %}
+                                            <div class="text-center">
+                                                <small class="text-muted">
+                                                    <strong>Biodiversity Impact:</strong><br>
+                                                    {% if recommendation.reasoning.sustainability_details.factors.biodiversity_impact > 0 %}+{% endif %}{{ recommendation.reasoning.sustainability_details.factors.biodiversity_impact|floatformat:0 }}
+                                                    <span class="badge bg-{% if recommendation.reasoning.sustainability_details.factors.biodiversity_impact > 0 %}success{% elif recommendation.reasoning.sustainability_details.factors.biodiversity_impact < 0 %}danger{% else %}secondary{% endif %}">
+                                                        {% if recommendation.reasoning.sustainability_details.factors.biodiversity_impact > 0 %}Positive{% elif recommendation.reasoning.sustainability_details.factors.biodiversity_impact < 0 %}Negative{% else %}Neutral{% endif %}
+                                                    </span>
+                                                </small>
+                                            </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card dashboard-card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-clipboard-check"></i> Analysis</h5>
+            </div>
+            <div class="card-body">
+                {% if recommendation.reasoning.reasons %}
+                <h6 class="mb-2">Key Points:</h6>
+                <ul class="mb-0">
+                    {% for reason in recommendation.reasoning.reasons %}
+                    <li class="mb-2">{{ reason }}</li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-muted">No detailed analysis available.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if recommendation.reasoning.match_details %}
+<div class="row">
+    <div class="col-12">
+        <div class="card dashboard-card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0"><i class="bi bi-gear"></i> Condition Match Details</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    {% for key, value in recommendation.reasoning.match_details.items %}
+                    <div class="col-md-3 col-sm-6 mb-3">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h6 class="text-muted mb-1">{{ key|upper }}</h6>
+                                <span class="badge bg-{% if value == 'optimal' or value == 'sufficient' %}success{% elif value == 'acceptable' or value == 'low' %}warning{% else %}danger{% endif %}">
+                                    {{ value|title }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+

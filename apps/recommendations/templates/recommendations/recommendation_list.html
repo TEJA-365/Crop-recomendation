@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block title %}My Recommendations - Crop Recommendation{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <h2><i class="bi bi-list-check"></i> My Recommendations</h2>
+                <p class="text-muted">View all your crop recommendations</p>
+            </div>
+            <div>
+                <a href="{% url 'recommendations:recommendation_request' %}" class="btn btn-success">
+                    <i class="bi bi-search"></i> Get New Recommendations
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if recommendations %}
+<div class="row">
+    <div class="col-12">
+        <div class="card dashboard-card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="bi bi-list-ul"></i> All Recommendations</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Field</th>
+                                <th>Crop</th>
+                                <th>Confidence</th>
+                                <th>Expected Yield</th>
+                                <th>Profit</th>
+                                <th>Sustainability</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for rec in recommendations %}
+                            <tr>
+                                <td>{{ rec.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <a href="{% url 'farms:field_detail' rec.field.pk %}" class="text-decoration-none">
+                                        {{ rec.field.name }}
+                                    </a>
+                                </td>
+                                <td><strong>{{ rec.crop_name }}</strong></td>
+                                <td>
+                                    <span class="badge bg-{% if rec.confidence_score >= 80 %}success{% elif rec.confidence_score >= 60 %}warning{% else %}danger{% endif %}">
+                                        {{ rec.confidence_score }}%
+                                    </span>
+                                </td>
+                                <td>{{ rec.expected_yield|floatformat:0 }} kg/ha</td>
+                                <td>₹{{ rec.profit_margin|floatformat:0 }}</td>
+                                <td>
+                                    <span class="badge bg-success">{{ rec.sustainability_score }}%</span>
+                                </td>
+                                <td>
+                                    <a href="{% url 'recommendations:recommendation_detail' rec.pk %}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i> View
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="row">
+    <div class="col-12">
+        <div class="card dashboard-card">
+            <div class="card-body text-center py-5">
+                <div class="empty-state">
+                    <i class="bi bi-list-check" style="font-size: 4rem; opacity: 0.5;"></i>
+                    <h4 class="mt-3">No Recommendations Yet</h4>
+                    <p class="text-muted">Get started by requesting crop recommendations for your fields.</p>
+                    <div class="mt-4">
+                        <a href="{% url 'recommendations:recommendation_request' %}" class="btn btn-success">
+                            <i class="bi bi-search"></i> Get Recommendations
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+

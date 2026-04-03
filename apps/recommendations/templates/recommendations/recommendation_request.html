@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+
+{% block title %}Get Crop Recommendations - Crop Recommendation{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <div>
+                <h2 class="mb-1">
+                    <i class="bi bi-lightbulb-fill text-warning"></i> Get Crop Recommendations
+                </h2>
+                <p class="text-muted mb-0">AI-powered crop suggestions based on your field data</p>
+            </div>
+            <div class="mt-2 mt-md-0">
+                <a href="{% url 'users:dashboard' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <!-- Main Form Section -->
+    <div class="col-lg-8 col-xl-7 mb-4">
+        <div class="card dashboard-card">
+            <div class="card-header bg-success text-white d-flex align-items-center">
+                <div class="me-3" style="font-size: 2rem;">
+                    <i class="bi bi-search"></i>
+                </div>
+                <div>
+                    <h4 class="mb-0">Request Recommendations</h4>
+                    <small class="opacity-75">Get personalized crop suggestions for your field</small>
+                </div>
+            </div>
+            <div class="card-body p-4">
+                {% if form.field.queryset.count == 0 %}
+                    <!-- No Fields Available -->
+                    <div class="text-center py-5">
+                        <div class="mb-4">
+                            <i class="bi bi-inbox" style="font-size: 4rem; color: #6c757d; opacity: 0.5;"></i>
+                        </div>
+                        <h5 class="mb-3">No Fields Available</h5>
+                        <p class="text-muted mb-4">
+                            You need to create a farm and field before getting crop recommendations.
+                        </p>
+                        <div class="d-flex gap-2 justify-content-center">
+                            <a href="{% url 'farms:farm_create' %}" class="btn btn-success">
+                                <i class="bi bi-plus-circle me-2"></i> Create Farm
+                            </a>
+                            <a href="{% url 'farms:field_create' %}" class="btn btn-primary">
+                                <i class="bi bi-map me-2"></i> Create Field
+                            </a>
+                            <a href="{% url 'users:dashboard' %}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i> Back to Dashboard
+                            </a>
+                        </div>
+                    </div>
+                {% else %}
+                    <!-- Info Banner -->
+                    <div class="alert alert-info border-0 shadow-sm mb-4" style="background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-info-circle-fill me-3" style="font-size: 1.5rem; color: #0c5460;"></i>
+                            <div>
+                                <strong class="d-block mb-1" style="color: #0c5460;">How it works:</strong>
+                                <p class="mb-0 small" style="color: #0c5460;">
+                                    Our AI system analyzes your field's soil properties and weather conditions 
+                                    to recommend the best crops for your location. Make sure your field has soil data for accurate recommendations.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        {% if form.non_field_errors %}
+                            <div class="alert alert-danger border-0 shadow-sm">
+                                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                {{ form.non_field_errors }}
+                            </div>
+                        {% endif %}
+
+                        <!-- Field Selection -->
+                        <div class="mb-4">
+                            <label for="{{ form.field.id_for_label }}" class="form-label fw-bold">
+                                <i class="bi bi-map-fill text-primary me-2"></i>
+                                Select Field <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group input-group-lg">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-geo-alt text-primary"></i>
+                                </span>
+                                {{ form.field }}
+                            </div>
+                            {% if form.field.errors %}
+                                <div class="text-danger small mt-2">
+                                    <i class="bi bi-exclamation-circle me-1"></i>
+                                    {{ form.field.errors }}
+                                </div>
+                            {% endif %}
+                            <div class="form-text mt-2">
+                                <i class="bi bi-info-circle me-1"></i>
+                                Choose a field to get crop recommendations
+                            </div>
+                        </div>
+
+                        <!-- Weather Checkbox -->
+                        <div class="mb-4">
+                            <div class="card border-0 shadow-sm" style="background: #f8f9fa;">
+                                <div class="card-body p-3">
+                                    <div class="form-check form-switch form-check-lg">
+                                        {{ form.include_weather }}
+                                        <label class="form-check-label fw-semibold ms-3" for="{{ form.include_weather.id_for_label }}">
+                                            <i class="bi bi-cloud-sun-fill text-info me-2"></i>
+                                            Include current weather data in recommendations
+                                        </label>
+                                    </div>
+                                    {% if form.include_weather.errors %}
+                                        <div class="text-danger small mt-2">
+                                            <i class="bi bi-exclamation-circle me-1"></i>
+                                            {{ form.include_weather.errors }}
+                                        </div>
+                                    {% endif %}
+                                    <div class="form-text mt-2 ms-5">
+                                        <small>Weather data improves recommendation accuracy by considering current conditions</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end pt-3 border-top">
+                            <a href="{% url 'users:dashboard' %}" class="btn btn-outline-secondary btn-lg px-4">
+                                <i class="bi bi-x-circle me-2"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-success btn-lg px-5 shadow-sm">
+                                <i class="bi bi-search me-2"></i> Get Recommendations
+                            </button>
+                        </div>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Information Sidebar -->
+    <div class="col-lg-4 col-xl-5 mb-4">
+        <!-- About Recommendations Card -->
+        <div class="card dashboard-card">
+            <div class="card-header bg-primary text-white d-flex align-items-center">
+                <i class="bi bi-question-circle-fill me-2" style="font-size: 1.5rem;"></i>
+                <h5 class="mb-0">About Recommendations</h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-3 fw-semibold">Our recommendation system considers:</p>
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item border-0 px-0 py-2">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        <strong>Soil pH level</strong>
+                    </div>
+                    <div class="list-group-item border-0 px-0 py-2">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        <strong>Nutrient content</strong> (N, P, K)
+                    </div>
+                    <div class="list-group-item border-0 px-0 py-2">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        <strong>Soil moisture</strong>
+                    </div>
+                    <div class="list-group-item border-0 px-0 py-2">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        <strong>Weather conditions</strong> (temp, rainfall)
+                    </div>
+                    <div class="list-group-item border-0 px-0 py-2">
+                        <i class="bi bi-check-circle-fill text-success me-2"></i>
+                        <strong>Seasonal suitability</strong>
+                    </div>
+                </div>
+                <div class="alert alert-warning border-0 shadow-sm mt-3 mb-0">
+                    <i class="bi bi-lightbulb-fill me-2"></i>
+                    <strong>Tip:</strong> For best results, ensure your field has recent soil data. 
+                    You can fetch soil data from APIs or enter it manually.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

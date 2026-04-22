@@ -1,4 +1,4 @@
-# 🌾 AI-Driven Crop Recommendation System
+#  Smart Crop Recommendation System
 
 A Django-based web application that provides AI-powered, personalized crop recommendations to farmers based on soil properties, weather forecasts, and crop rotation history.
 
@@ -8,19 +8,19 @@ A Django-based web application that provides AI-powered, personalized crop recom
 
 ---
 
-## ✨ Features
+##  Features
 
-- **🧪 Soil Analysis** — Integration with Soil Grids API (ISRIC) for global soil data, with ICAR-based regional estimates as fallback for Indian locations
-- **🌤️ Weather Integration** — Real-time weather data and 7-day forecasts via Open-Meteo (free, no API key needed) with optional OpenWeatherMap support
-- **🌱 Crop Recommendations** — ML-powered suggestions with yield, profit, and sustainability predictions
-- **🏡 Farm & Field Management** — Register multiple farms/fields with GPS coordinates, soil data, and crop history
-- **🌐 Multilingual Support** — Interface available in English, Hindi, Telugu, Tamil, Kannada, and Marathi
-- **💬 Chat Interface** — Text-based chat for farming queries
-- **📊 Dashboard** — Overview of farms, fields, soil data, weather, and recommendations
+- ** Soil Analysis** — Integration with Soil Grids API (ISRIC) for global soil data, with ICAR-based regional estimates as fallback for Indian locations
+- ** Weather Integration** — Real-time weather data and 7-day forecasts via Open-Meteo (free, no API key needed) with optional OpenWeatherMap support
+- ** Crop Recommendations** — ML-powered suggestions with yield, profit, and sustainability predictions
+- ** Farm & Field Management** — Register multiple farms/fields with GPS coordinates, soil data, and crop history
+- ** Multilingual Support** — Interface available in English, Hindi, Telugu, Tamil, Kannada, and Marathi
+- ** Chat Interface** — Text-based chat for farming queries
+- ** Dashboard** — Overview of farms, fields, soil data, weather, and recommendations
 
 ---
 
-## 🛠️ Technology Stack
+##  Technology Stack
 
 | Layer | Technology |
 |-------|-----------|
@@ -34,7 +34,7 @@ A Django-based web application that provides AI-powered, personalized crop recom
 
 ---
 
-## 📁 Project Structure
+##  Project Structure
 
 ```
 CropRecommendation/
@@ -58,7 +58,7 @@ CropRecommendation/
 
 ---
 
-## 🚀 Quick Setup
+##  Quick Setup
 
 ### Prerequisites
 
@@ -66,7 +66,7 @@ CropRecommendation/
 - **pip** (comes with Python)
 - **Git** (for cloning)
 
-> 📖 For detailed step-by-step instructions, see **[QUICK_START.md](QUICK_START.md)**
+>  For detailed step-by-step instructions, see **[QUICK_START.md](QUICK_START.md)**
 
 ### 1. Clone the Repository
 
@@ -123,7 +123,7 @@ python manage.py runserver         # Start dev server
 
 ## 🔌 API Configuration
 
-### Weather Data (Works out of the box ✅)
+### Weather Data (Works out of the box )
 
 The app uses **Open-Meteo** by default — a free weather API that requires **no API key**. It provides:
 - Current weather (temperature, humidity, wind, rain, pressure)
@@ -135,7 +135,7 @@ The app uses **Open-Meteo** by default — a free weather API that requires **no
 OPENWEATHER_API_KEY=your-key-here
 ```
 
-### Soil Data (Works out of the box ✅)
+### Soil Data (Works out of the box )
 
 The app uses two data sources:
 1. **ISRIC Soil Grids v2.0** — Global soil data (pH, nitrogen, organic carbon, clay/sand content)
@@ -147,7 +147,7 @@ No API key needed for either source.
 
 ---
 
-## 🌍 Environment Variables (Optional)
+##  Environment Variables (Optional)
 
 Create a `.env` file in the project root for production or advanced configuration:
 
@@ -166,7 +166,7 @@ LIBRETRANSLATE_URL=https://libretranslate.com
 
 ---
 
-## 📱 App Workflow
+##  App Workflow
 
 ```
 Register/Login → Add Farm (with GPS coordinates)
@@ -187,7 +187,7 @@ Register/Login → Add Farm (with GPS coordinates)
 
 ---
 
-## 🧪 Running Tests
+##  Running Tests
 
 ```bash
 python manage.py test
@@ -196,7 +196,7 @@ python manage.py check    # Check for configuration issues
 
 ---
 
-## 🔧 Development Commands
+##  Development Commands
 
 | Command | Description |
 |---------|-------------|
@@ -210,7 +210,7 @@ python manage.py check    # Check for configuration issues
 
 ---
 
-## 📋 Troubleshooting
+##  Troubleshooting
 
 | Issue | Solution |
 |-------|----------|
@@ -223,7 +223,7 @@ python manage.py check    # Check for configuration issues
 
 ---
 
-## 👥 Contributing
+##  Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/your-feature`)
@@ -233,12 +233,12 @@ python manage.py check    # Check for configuration issues
 
 ---
 
-## 📧 Contact
+##  Contact
 
 **Email:** saitejatangellapalli@gmail.com
 
 ---
 
-## 📄 License
+##  License
 
 This project is developed for educational and research purposes.
